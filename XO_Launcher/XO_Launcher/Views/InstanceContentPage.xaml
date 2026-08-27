@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="XO_Launcher.Views.InstanceContentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:XO_Launcher.Models">
+
+    <UserControl.Resources>
+        <models:SelectedAccentBorderConverter x:Key="SelectedAccentBorderConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <StackPanel Spacing="2" MaxWidth="360" HorizontalAlignment="Left">
+                <TextBlock x:Name="TitleText" FontSize="18" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                <TextBlock x:Name="CountText" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Spacing="8">
+                <Button Content="从下载库安装" Height="32" Padding="12,0"
+                        Background="{ThemeResource AccentBrush}" Foreground="{ThemeResource AccentOnBrush}"
+                        BorderThickness="0" CornerRadius="4" FontSize="12" Click="InstallFromLibrary_Click" />
+                <Button Content="打开目录" Height="32" Padding="12,0"
+                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}"
+                        BorderThickness="0" CornerRadius="4" FontSize="12" Click="OpenFolder_Click" />
+                <Button Content="刷新" Height="32" Padding="12,0"
+                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}"
+                        BorderThickness="0" CornerRadius="4" FontSize="12" Click="Refresh_Click" />
+            </StackPanel>
+        </Grid>
+
+        <ListView x:Name="ContentList" Grid.Row="2" SelectionMode="None">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="0,0,0,8" />
+                    <Setter Property="MinHeight" Value="0" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="8"
+                            BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1" Padding="14,10">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Spacing="2" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding ShownName}" FontSize="13" FontWeight="SemiBold"
+                                           Foreground="{ThemeResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding DetailText}" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" IsOn="{Binding IsEnabled}" OnContent="启用" OffContent="禁用"
+                                          FontSize="11" MinWidth="0" VerticalAlignment="Center" Toggled="Enabled_Toggled" />
+                            <Button Grid.Column="2" Content="移除" Height="30" Padding="12,0" VerticalAlignment="Center"
+                                    Background="{ThemeResource DangerButtonBrush}" Foreground="{ThemeResource DangerButtonForegroundBrush}"
+                                    BorderThickness="0" CornerRadius="4" FontSize="12" Click="Delete_Click" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock x:Name="EmptyText" Grid.Row="2" FontSize="13" Foreground="{ThemeResource TextSecondaryBrush}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"
+                   MaxWidth="420" Visibility="Collapsed" />
+        <TextBlock x:Name="StatusText" Grid.Row="3" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" Margin="0,8,0,0" />
+
+        <Grid x:Name="LibraryPickerOverlay" Grid.RowSpan="4" Visibility="Collapsed" Background="#99000000">
+            <Border Width="480" MaxHeight="440" Background="{ThemeResource CardBackgroundBrush}"
+                    BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1" CornerRadius="10" Padding="18"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="12" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="14" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="PickerTitle" FontSize="16" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                    <TextBlock x:Name="PickerHint" Grid.Row="2" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                    <ListView x:Name="PickerList" Grid.Row="4" SelectionMode="None" IsItemClickEnabled="True"
+                              ItemClick="PickerList_ItemClick">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="MinHeight" Value="0" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0,0,0,8" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="8" Padding="12,10"
+                                        BorderThickness="2"
+                                        BorderBrush="{Binding IsSelected, Converter={StaticResource SelectedAccentBorderConverter}}">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                                                   Foreground="{ThemeResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding SizeText}" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock x:Name="PickerEmpty" Grid.Row="4" FontSize="13" Foreground="{ThemeResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" TextWrapping="Wrap" TextAlignment="Center" />
+                    <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                        <Button Content="取消" Height="32" Padding="16,0"
+                                Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}"
+                                BorderThickness="0" CornerRadius="4" FontSize="12" Click="CancelPicker_Click" />
+                        <Button x:Name="ConfirmPickerButton" Content="安装" Height="32" Padding="16,0"
+                                Background="{ThemeResource AccentBrush}" Foreground="{ThemeResource AccentOnBrush}"
+                                BorderThickness="0" CornerRadius="4" FontSize="12" Click="ConfirmPicker_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

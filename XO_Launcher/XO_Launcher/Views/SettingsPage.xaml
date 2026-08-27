@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="XO_Launcher.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:XO_Launcher.Models"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <models:HexToBrushConverter x:Key="HexToBrushConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Disabled">
+            <StackPanel MaxWidth="880" HorizontalAlignment="Stretch" Padding="32,24,32,32" Spacing="20">
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="设置" FontSize="24" FontWeight="Bold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                    <TextBlock Text="启动器选项、个性化与开源致谢" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                </StackPanel>
+
+                <!-- ==================== 个性化 ==================== -->
+                <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="10" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1" Padding="20,18">
+                    <StackPanel Spacing="14">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="个性化" FontSize="15" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                            <TextBlock Text="自动以你的启动器。" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button x:Name="DarkThemeButton" Tag="dark" Content="暗色模式" Click="ThemeCard_Click"
+                                    Height="36" Padding="18,0" FontSize="13" BorderThickness="2" CornerRadius="6"
+                                    Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" />
+                            <Button x:Name="LightThemeButton" Tag="light" Content="亮色模式" Click="ThemeCard_Click"
+                                    Height="36" Padding="18,0" FontSize="13" BorderThickness="2" CornerRadius="6"
+                                    Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch x:Name="TranslateNamesToggle" Header="以中文显示模组名称（中文译名可能存在严重错误）" OnContent="已开启" OffContent="已关闭"
+                                      FontSize="12" Toggled="TranslateNamesToggle_Toggled" />
+                        <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                   Text="开启后将显示mod的中文名称。数据来自 MC 百科等公开资料。" />
+                    </StackPanel>
+                </Border>
+
+                <!-- ==================== 启动器设置 ==================== -->
+                <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="10" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1" Padding="20,18">
+                    <StackPanel Spacing="18">
+                        <TextBlock Text="启动器设置" FontSize="15" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="游戏目录" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="GameDirBox" Background="{ThemeResource InputBackgroundBrush}" Foreground="{ThemeResource TextPrimaryBrush}" BorderBrush="{ThemeResource DividerBrush}" FontSize="12"
+                                         LostFocus="GameDirBox_LostFocus" />
+                                <Button Grid.Column="1" Content="浏览…" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="BrowseGameDir_Click" />
+                            </Grid>
+                            <TextBlock x:Name="GameDirHint" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                       Text="可选择游戏安装的文件夹" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="Java 虚拟机" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                       Text="自动搜索已安装的 Java。开启自动选择后，没有合适版本时将下载Java。" />
+                            <ToggleSwitch x:Name="AutoMatchToggle" Header="按游戏版本自动匹配 Java" OnContent="已开启" OffContent="已关闭"
+                                          FontSize="12" Toggled="AutoMatchToggle_Toggled" />
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="JavaCombo" HorizontalAlignment="Stretch"
+                                          PlaceholderText="未检测到 Java，可浏览或下载官方运行时"
+                                          Background="{ThemeResource InputBackgroundBrush}" FontSize="12"
+                                          SelectionChanged="JavaCombo_SelectionChanged" />
+                                <Button Grid.Column="1" Content="浏览…" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="BrowseJava_Click" />
+                                <Button Grid.Column="2" Content="重新扫描" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="DetectJava_Click" />
+                                <Button Grid.Column="3" x:Name="DownloadJavaButton" Content="下载官方 Java" Height="32" Padding="16,0"
+                                        Background="{ThemeResource AccentBrush}" Foreground="{ThemeResource AccentOnBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="DownloadJava_Click" />
+                            </Grid>
+                            <TextBlock x:Name="JavaStatusText" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <Grid>
+                                <TextBlock Text="内存分配" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                                <TextBlock x:Name="MemoryValueText" Text="4096 MB" FontSize="12" Foreground="{ThemeResource TextPrimaryBrush}"
+                                           HorizontalAlignment="Right" />
+                            </Grid>
+                            <Slider x:Name="MemorySlider" Minimum="1024" Maximum="16384" Value="4096" StepFrequency="1024" Width="360" HorizontalAlignment="Left"
+                                    Foreground="{ThemeResource AccentBrush}" ValueChanged="MemorySlider_ValueChanged" />
+                            <TextBlock Text="建议分配 4 GB 内存。" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="资源下载目录" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="DownloadDirBox" Background="{ThemeResource InputBackgroundBrush}"
+                                         Foreground="{ThemeResource TextPrimaryBrush}" BorderBrush="{ThemeResource DividerBrush}" FontSize="12"
+                                         LostFocus="DownloadDirBox_LostFocus" />
+                                <Button Grid.Column="1" Content="浏览…" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="BrowseDownloadDir_Click" />
+                                <Button Grid.Column="2" Content="打开目录" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="OpenDownloadFolder_Click" />
+                            </Grid>
+                            <TextBlock x:Name="DownloadDirHint" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                       Text="模组、光影与资源包将保存至此目录。下载完成后，请在版本设置中选择并安装。" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="诊断与日志" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                       Text="游戏异常退出时会自动做故障分析。也可在此分析当前版本日志，或导出报告。" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button x:Name="ExportLogButton" Content="导出错误日志" Height="32" Padding="16,0"
+                                        Background="{ThemeResource AccentBrush}" Foreground="{ThemeResource AccentOnBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="ExportLog_Click" />
+                                <Button Content="故障分析" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="AnalyzeCrash_Click" />
+                                <Button x:Name="ExportCrashButton" Content="导出崩溃日志" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="ExportCrash_Click" />
+                                <Button Content="打开日志文件夹" Height="32" Padding="16,0"
+                                        Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                        Click="OpenLogFolder_Click" />
+                            </StackPanel>
+                            <TextBlock x:Name="LogStatusText" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ==================== 开源致谢 ==================== -->
+                <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="10" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="1" Padding="20,18">
+                    <StackPanel Spacing="14">
+                        <TextBlock Text="开源致谢" FontSize="15" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                        <TextBlock FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                   Text="XO Launcher 在版本管理、实例隔离、模组生态与多账号等职责拆分上，参考了下列 GitHub 开源 Minecraft 启动器。向这些项目的作者与社区贡献者表示感谢。" />
+
+                        <ItemsControl x:Name="CreditsList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{ThemeResource CardAltBackgroundBrush}" CornerRadius="8" Padding="14,12" Margin="0,0,0,10">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border Width="40" Height="40" CornerRadius="8"
+                                                    Background="{Binding IconColor, Converter={StaticResource HexToBrushConverter}}" VerticalAlignment="Top">
+                                                <TextBlock Text="{Binding IconText}" FontSize="17" FontWeight="Bold" Foreground="White"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1" Spacing="4">
+                                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                                                    <TextBlock Text="{Binding RepoText}" FontSize="11" Foreground="{ThemeResource AccentBrush}" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                                                <HyperlinkButton Content="前往 GitHub 查看" NavigateUri="{Binding GitHubUri}" FontSize="11"
+                                                                  Foreground="#4EA8DE" Padding="0" HorizontalAlignment="Left" Margin="0,2,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Border Background="{ThemeResource CardAltBackgroundBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <FontIcon Glyph="&#xE946;" FontSize="14" Foreground="{ThemeResource AccentBrush}" VerticalAlignment="Center" />
+                                <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                           Text="同时感谢 Modrinth 与 Mojang 提供的开放 API —— 本启动器的模组资源与游戏版本清单均由它们提供。" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

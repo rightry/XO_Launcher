@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="XO_Launcher.Views.InstanceSettingsPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:XO_Launcher.Views">
+
+    <UserControl.Resources>
+        <Style x:Key="SectionNavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#C8C8C8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Padding" Value="12,0" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style x:Key="FolderShortcutStyle" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{ThemeResource ChromeTextBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource DividerBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Height" Value="72" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="14,0" />
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Width="780" Height="540">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="168" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Background="{ThemeResource SidebarBackgroundBrush}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,1,0" Padding="10,12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollMode="Disabled">
+            <StackPanel Spacing="4">
+                <TextBlock Text="版本设置" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" Margin="8,0,0,8" />
+                <Button x:Name="NavBasicButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavBasic_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE713;" FontSize="13" />
+                        <TextBlock Text="基础" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NavShadersButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavShaders_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE706;" FontSize="14" Foreground="{ThemeResource AccentBrush}" />
+                        <TextBlock Text="光影管理" VerticalAlignment="Center" FontWeight="SemiBold" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NavModsButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavMods_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xEA86;" FontSize="13" />
+                        <TextBlock Text="模组管理" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NavPacksButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavPacks_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE8B9;" FontSize="13" />
+                        <TextBlock Text="资源包管理" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NavMemoryButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavMemory_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE950;" FontSize="13" />
+                        <TextBlock Text="内存管理" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="NavJvmButton" Style="{StaticResource SectionNavButtonStyle}" Click="NavJvm_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <FontIcon Glyph="&#xE943;" FontSize="13" />
+                        <TextBlock Text="JVM 参数" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- 基础 -->
+        <ScrollViewer x:Name="BasicPage" Grid.Column="1" Padding="22,16,22,12" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="16">
+                <TextBlock Text="基础" FontSize="18" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="版本名称" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                    <TextBox x:Name="DisplayNameBox" PlaceholderText="显示于首页的名称" FontSize="13" />
+                    <TextBlock x:Name="FolderIdHint" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                </StackPanel>
+
+                <ToggleSwitch x:Name="IndependentToggle" Header="为此版本使用独立启动设置" OnContent="已开启" OffContent="跟随全局"
+                              FontSize="12" Toggled="IndependentToggle_Toggled" />
+                <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                           Text="开启后，内存与 Java 虚拟机参数仅作用于此版本。关闭后将继续使用「设置」中的全局选项。" />
+
+                <TextBlock Text="快捷方式" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" Margin="0,4,0,0" />
+                <Grid ColumnSpacing="10" RowSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{StaticResource FolderShortcutStyle}" Tag="screenshots" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="截图目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开 screenshots" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Column="1" Style="{StaticResource FolderShortcutStyle}" Tag="mods" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="模组目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开 mods" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="1" Style="{StaticResource FolderShortcutStyle}" Tag="saves" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="存档目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开 saves" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource FolderShortcutStyle}" Tag="version" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="版本目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开当前版本目录" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="2" Style="{StaticResource FolderShortcutStyle}" Tag="shaderpacks" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="光影目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开 shaderpacks" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource FolderShortcutStyle}" Tag="resourcepacks" Click="OpenFolder_Click">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="资源包目录" FontSize="13" FontWeight="SemiBold" />
+                            <TextBlock Text="打开 resourcepacks" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 模组 / 光影 / 资源包 -->
+        <Grid x:Name="ModsPage" Grid.Column="1" Padding="22,16,22,12" Visibility="Collapsed">
+            <local:InstanceContentPage x:Name="ModsContent" />
+        </Grid>
+        <Grid x:Name="ShadersPage" Grid.Column="1" Padding="22,16,22,12" Visibility="Collapsed">
+            <local:InstanceContentPage x:Name="ShadersContent" />
+        </Grid>
+        <Grid x:Name="PacksPage" Grid.Column="1" Padding="22,16,22,12" Visibility="Collapsed">
+            <local:InstanceContentPage x:Name="PacksContent" />
+        </Grid>
+
+        <!-- 内存管理 -->
+        <ScrollViewer x:Name="MemoryPage" Grid.Column="1" Padding="22,16,22,12" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+            <StackPanel Spacing="16">
+                <TextBlock Text="内存管理" FontSize="18" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                <TextBlock x:Name="MemoryHintText" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                <ContentControl x:Name="MemoryFields" HorizontalContentAlignment="Stretch">
+                    <StackPanel Spacing="10">
+                        <Grid>
+                            <TextBlock Text="分配内存" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <TextBlock x:Name="MemoryValueText" Text="4096 MB" FontSize="12" Foreground="{ThemeResource TextPrimaryBrush}"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
+                        <Slider x:Name="MemorySlider" Minimum="1024" Maximum="16384" Value="4096" StepFrequency="512"
+                                Foreground="{ThemeResource AccentBrush}" ValueChanged="MemorySlider_ValueChanged" />
+                        <TextBlock FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap"
+                                   Text="建议给游戏留出系统所需内存。分配过高可能导致无法创建 Java 虚拟机。" />
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- JVM 参数 -->
+        <ScrollViewer x:Name="JvmPage" Grid.Column="1" Padding="22,16,22,12" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Java 虚拟机参数" FontSize="18" FontWeight="SemiBold" Foreground="{ThemeResource TextPrimaryBrush}" />
+                <TextBlock x:Name="JvmHintText" FontSize="11" Foreground="{ThemeResource TextSecondaryBrush}" TextWrapping="Wrap" />
+                <ContentControl x:Name="JvmFields" HorizontalContentAlignment="Stretch">
+                    <StackPanel Spacing="14">
+                        <StackPanel Spacing="6">
+                            <ToggleSwitch x:Name="AutoMatchToggle" Header="按游戏版本自动匹配 Java" OnContent="已开启" OffContent="已关闭" FontSize="12" />
+                            <ComboBox x:Name="JavaCombo" HorizontalAlignment="Stretch" PlaceholderText="选择已检测到的 Java" FontSize="12" />
+                            <Button Content="浏览 javaw.exe…" Height="32" Padding="16,0" HorizontalAlignment="Left"
+                                    Background="{ThemeResource NeutralButtonBrush}" Foreground="{ThemeResource NeutralButtonForegroundBrush}" BorderThickness="0" CornerRadius="4" FontSize="12"
+                                    Click="BrowseJava_Click" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="窗口大小" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="WidthBox" PlaceholderText="宽" />
+                                <TextBlock Grid.Column="1" Text="×" VerticalAlignment="Center" Foreground="{ThemeResource TextSecondaryBrush}" />
+                                <TextBox x:Name="HeightBox" Grid.Column="2" PlaceholderText="高" />
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="JVM 参数" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <TextBox x:Name="JvmArgsBox" PlaceholderText="例如 -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+                                     FontSize="12" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="72" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="游戏参数" FontSize="12" Foreground="{ThemeResource TextSecondaryBrush}" />
+                            <TextBox x:Name="GameArgsBox" PlaceholderText="例如 --server play.example.com --port 25565"
+                                     FontSize="12" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="56" />
+                        </StackPanel>
+                    </StackPanel>
+                </ContentControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
